@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\s12782638\Downloads\MeshWireframeDrawer-main\C_BUILD\CMakeFiles\d6acf0c979f89e62973d90247eae3f11\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{59017452-CAAE-3280-AFB7-18D9042DC892}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

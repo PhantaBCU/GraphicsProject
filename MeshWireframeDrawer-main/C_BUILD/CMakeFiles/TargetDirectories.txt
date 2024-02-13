@@ -1,0 +1,3 @@
+C:/Users/s12782638/Downloads/MeshWireframeDrawer-main/C_BUILD/CMakeFiles/MeshWireframeDrawer.dir
+C:/Users/s12782638/Downloads/MeshWireframeDrawer-main/C_BUILD/CMakeFiles/ALL_BUILD.dir
+C:/Users/s12782638/Downloads/MeshWireframeDrawer-main/C_BUILD/CMakeFiles/ZERO_CHECK.dir

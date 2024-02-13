@@ -1,0 +1,11 @@
+MakeNamedMaterial "default"
+    "string type" [ "coateddiffuse" ]
+    "rgb reflectance" [ 0.5 0.5 0.5 ]
+    "float uroughness" [ 0.1 ]
+    "float vroughness" [ 0.1 ]
+    "float eta" [1.5]
+    "float thickness" [0.0]
+    "bool remaproughness" false
+MakeNamedMaterial "Material"
+  "string type" [ "diffuse" ]
+  "rgb reflectance" [ 0.800000011920929 0.800000011920929 0.800000011920929 ]
