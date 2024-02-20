@@ -67,16 +67,67 @@ void line(Vec2i t0, Vec2i t1, TGAImage& image, TGAColor colour) {
     }
 }
 
-void triangle(Vec2i vertices[3], TGAImage image, TGAColor color) {
-    if (vertices[0].y == vertices[1].y && vertices[0].y == vertices[2].y) { return; }
+bool computeBarycentricPoint(Vec2i vertices[3], Vec2i point)
+{
+    Vec2i v0 = vertices[1] - vertices[0];
+    Vec2i v1 = vertices[2] - vertices[0];
+    Vec2i v2 = point - vertices[0];
 
-    if (vertices[0].y > vertices[1].y) { std::swap(vertices[0], vertices[1]); }
-    if (vertices[0].y > vertices[2].y) { std::swap(vertices[0], vertices[2]); }
-    if (vertices[1].y > vertices[2].y) { std::swap(vertices[1], vertices[2]); }
+    float d00 = (v0.x * v0.x + v0.y * v0.y);
+    float d01 = (v0.x * v1.x + v0.y * v1.y);
+    float d11 = (v1.x * v1.x + v1.y * v1.y);
+    float d20 = (v2.x * v0.x + v2.y * v0.y);
+    float d21 = (v2.x * v1.x + v2.y * v1.y);
 
-    int total_height = vertices[2].y - vertices[0].y;
+    float denom = d00 * d11 - d01 * d01;
+    float v = (d11 * d20 - d01 * d21) / denom;
+    float w = (d00 * d21 - d01 * d20) / denom;
+
+    float u = 1.0f - v - w;
+
+    if (u >= 0.0f && v >= 0.0f && w >= 0.0f) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
+void triangle(Vec2i vertices[3], TGAImage& image, TGAColor color) {
+
+    int minX, minY, maxX, maxY;
+
+    minX = minY = INT_MAX;
+    maxX = maxY = INT_MIN;
+
+    computeBoundingBox(minX, minY, maxX, maxY, vertices);
+
+    for (int x = minX; x <= maxX; x++) {
+        for (int y = minY; y <= maxY; y++) {
+            if (computeBarycentricPoint(vertices, Vec2i(x, y))) {
+                image.set(x, y, color);
+            }
+        }
+    }
+
+}
+
+void computeBoundingBox(int& minX, int& minY, int& maxX, int& maxY, Vec2i vertices[]) {
+    for (int vert = 0; vert < 3; vert++) {
+        if (minX > vertices[vert].x) {
+            minX = vertices[vert].x;
+        }
+        if (maxX < vertices[vert].x) {
+            maxX = vertices[vert].x;
+        }
+        if (minY > vertices[vert].y) {
+            minY = vertices[vert].y;
+        }
+        if (maxY < vertices[vert].y) {
+            maxY = vertices[vert].y;
+        }
+    }
+}
 
 void triangle(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage& image, TGAColor color) {
     if (t0.y == t1.y && t0.y == t2.y) { return; }
@@ -145,28 +196,20 @@ int main(int argc, char** argv) {
             );
             world_coords[j] = v;
         }
-        Vec3f n = (world_coords[2] - world_coords[0]) ^ (world_coords[2] - world_coords[0]);
+        Vec3f n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0]);
         n.normalize();
         float intensity = n * light_dir;
         if (intensity > 0) {
-            triangle(screen_coords[0], screen_coords[1], screen_coords[2], image, TGAColor(intensity * 255, intensity * 255, intensity * 255, 255));
-            allowedIntensityCount++;
-        }
-        else {
-            failedIntensityCount++;
+            triangle(screen_coords, image, TGAColor(intensity * 255, intensity * 255, intensity * 255, 255));
         }
     }
+    Vec2i tempTriangle[] = {Vec2i(200, 100),Vec2i(100, 100),Vec2i(150, 200)};
+    Vec2i tempTriangle2[] = { Vec2i(150, 200),Vec2i(200, 100),Vec2i(400, 200) };
 
-    std::cout << "Failed Count: " << failedIntensityCount << "\nCorrect Count: " << allowedIntensityCount << std::endl;
 
+    triangle(tempTriangle, image, red);
+    triangle(tempTriangle2, image, red);
 
-    Vec2i t0[3] = { Vec2i(10,70),Vec2i(50,160) ,Vec2i(70,80) };
-    Vec2i t1[3] = { Vec2i(180,50),Vec2i(150,1) ,Vec2i(70,180) };
-    Vec2i t2[3] = { Vec2i(180,150),Vec2i(120,160) ,Vec2i(130,180) };
-
-    triangle(t0[0], t0[1], t0[2], image, red);
-    triangle(t1[0], t1[1], t1[2], image, green);
-    triangle(t2[0], t2[1], t2[2], image, blue);
 
     image.flip_vertically(); // we want to have the origin at the left bottom corner of the image
 

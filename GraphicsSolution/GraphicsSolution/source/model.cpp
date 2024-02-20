@@ -25,7 +25,7 @@ Model::Model(const char *filename) : verts_(), faces_() {
             iss >> trash;
             while (iss >> idx >> trash >> itrash >> trash >> itrash) {
                 idx--; // in wavefront obj all indices start at 1, not zero
-                f.push_back(idx);
+                f.push_back(idx);   
             }
             faces_.push_back(f);
         }
